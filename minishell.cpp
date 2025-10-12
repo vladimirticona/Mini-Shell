@@ -16,6 +16,18 @@ using namespace std;
 vector<string> historial;
 map<string, string> aliases;
 
+
+void mostrar_prompt() {  
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+        cout << "mini-shell [" << cwd << "]> ";
+    } else {
+        cout << "mini-shell> ";
+    }
+    cout.flush();
+}
+
+
 int main(){
 
 
