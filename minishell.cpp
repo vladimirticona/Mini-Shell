@@ -13,6 +13,9 @@
 #include <errno.h>
 using namespace std;
 
+vector<string> historial;
+map<string, string> aliases;
+
 int main(){
 
 
