@@ -67,6 +67,38 @@ void builtin_cd(const vector<string>& args) {	//Funcion para el comando "cd" par
 }
 
 
+void builtin_pwd() {	//Funcion para el comando "pwd" para mostrar el directorio actual
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+        cout << cwd << endl;
+    } else {
+        cerr << "pwd: error al obtener el directorio actual" << endl;
+    }
+}
+
+void builtin_help() {  //Lo que se imprimira cuando se escriba "help" o "ayuda"
+    cout << "\n=== MINI-SHELL - AYUDA ===" << endl;
+    cout << "\nComandos internos:" << endl;
+    cout << "  cd                    - Cambiar directorio" << endl;
+    cout << "  pwd                   - Mostrar directorio actual" << endl;
+    cout << "  help                  - Mostrar ayuda" << endl;
+    cout << "  history               - Mostrar historial de comandos" << endl;
+    cout << "  meminfo               - Mostrar estadísticas de memoria del proceso" << endl;
+    cout << "  alias [nombre='comando']  - Crear alias" << endl;
+    cout << "  unalias [nombre]      - Eliminar un alias" << endl;
+    cout << "  salir                 - Salir de la shell" << endl;
+    cout << "\nCaracterísticas:" << endl;
+    cout << "  comando > archivo     - Redirigir salida estándar a archivo" << endl;
+    cout << "  /ruta/absoluta/cmd    - Ejecutar comando con ruta absoluta" << endl;
+    cout << "  comando               - Buscar comando en /bin/" << endl;
+    cout << "\nEjemplos:" << endl;
+    cout << "  ls > listado.txt" << endl;
+    cout << "  alias ll='ls'" << endl;
+    cout << "  /usr/bin/whoami" << endl;
+    cout << "  cat /etc/hostname" << endl;
+    cout << "========================\n" << endl;
+}
+
 
 
 int main(){
