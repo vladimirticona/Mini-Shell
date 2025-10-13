@@ -27,6 +27,47 @@ void mostrar_prompt() {
     cout.flush();
 }
 
+vector<string> tokenizar(const string& linea) {  //Funcion para separar la linea de entrada en tokens
+    vector<string> tokens;
+    string token = "";
+    
+    for (size_t i = 0; i < linea.length(); i++) {
+        if (linea[i] == ' ' || linea[i] == '\t') {
+            if (!token.empty()) {
+                tokens.push_back(token);
+                token = "";
+            }
+        } else {
+            token += linea[i];
+        }
+    }
+    
+    if (!token.empty()) {
+        tokens.push_back(token);
+    }
+    
+    return tokens;
+}
+
+void builtin_cd(const vector<string>& args) {	//Funcion para el comando "cd" para cambiar de directorio
+    if (args.size() == 0) {
+        const char* home = getenv("HOME");
+        if (home == NULL) {
+            cerr << "cd: no se pudo obtener el directorio HOME" << endl;
+            return;
+        }
+        if (chdir(home) == -1) {
+            cerr << "cd: " << strerror(errno) << endl;
+        }
+    } else {
+        if (chdir(args[0].c_str()) == -1) {
+            cerr << "cd: " << args[0] << ": " << strerror(errno) << endl;
+        }
+    }
+}
+
+
+
 
 int main(){
 
