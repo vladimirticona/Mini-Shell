@@ -217,6 +217,29 @@ void builtin_unalias(const vector<string>& args) { //Para eliminar alias
 }
 
 
+bool es_ejecutable(const string& ruta) { //Verifica si una ruta corresponde a un archivo ejecutable
+    struct stat st;
+    if (stat(ruta.c_str(), &st) == 0) {
+        return (st.st_mode & S_IXUSR) || (st.st_mode & S_IXGRP) || (st.st_mode & S_IXOTH);
+    }
+    return false;
+}
+
+string resolver_ruta(const string& comando) { // Resuelve la ruta completa de un comando (absoluta o en /bin)
+    if (comando[0] == '/') {
+        if (es_ejecutable(comando)) {
+            return comando;
+        }
+        return "";
+    }
+    
+    string ruta_bin = "/bin/" + comando;
+    if (es_ejecutable(ruta_bin)) {
+        return ruta_bin;
+    }
+    
+    return "";
+}
 
 
 
