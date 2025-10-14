@@ -147,6 +147,78 @@ void builtin_meminfo() {   //Se mostrara las estadisticas
 }
 
 
+void builtin_alias(const vector<string>& args) { //Funcion para el comando "alias" para crear alias personalizados
+    if (args.empty()) {
+        if (aliases.empty()) {
+            cout << "No hay alias definidos" << endl;
+        } else {
+            cout << "\nAlias definidos:" << endl;
+            for (const auto& par : aliases) {
+                cout << "  " << par.first << " -> " << par.second << endl;
+            }
+            cout << endl;
+        }
+        return;
+    }
+    
+    string nombre, comando;
+    
+    if (args.size() >= 3 && args[1] == "=") {
+        nombre = args[0];
+        comando = args[2];
+        
+        for (size_t i = 3; i < args.size(); i++) {
+            comando += " " + args[i];
+        }
+    } else {
+        string argumento = args[0];
+        size_t pos_igual = argumento.find('=');
+        
+        if (pos_igual == string::npos) {
+            if (aliases.find(argumento) != aliases.end()) {
+                cout << argumento << " -> " << aliases[argumento] << endl;
+            } else {
+                cerr << "alias: '" << argumento << "' no está definido" << endl;
+            }
+            return;
+        }
+        
+        nombre = argumento.substr(0, pos_igual);
+        comando = argumento.substr(pos_igual + 1);
+    }
+    
+    if (comando.length() >= 2 && comando[0] == '\'' && comando[comando.length()-1] == '\'') {
+        comando = comando.substr(1, comando.length() - 2);
+    }
+    
+    if (nombre.empty() || comando.empty()) {
+        cerr << "alias: formato incorrecto. Usa: alias nombre='comando'" << endl;
+        return;
+    }
+    
+    aliases[nombre] = comando;
+    cout << "Alias creado: " << nombre << " -> " << comando << endl;
+}
+
+void builtin_unalias(const vector<string>& args) { //Para eliminar alias
+    if (args.empty()) {
+        cerr << "unalias: falta el nombre del alias" << endl;
+        return;
+    }
+    
+    string nombre = args[0];
+    
+    if (aliases.find(nombre) != aliases.end()) {
+        aliases.erase(nombre);
+        cout << "Alias '" << nombre << "' eliminado" << endl;
+    } else {
+        cerr << "unalias: '" << nombre << "' no está definido" << endl;
+    }
+}
+
+
+
+
 
 int main(){
 
