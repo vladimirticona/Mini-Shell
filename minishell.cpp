@@ -241,6 +241,98 @@ string resolver_ruta(const string& comando) { // Resuelve la ruta completa de un
     return "";
 }
 
+void ejecutar_comando(const vector<string>& tokens) { //Ejecuta comandos externos con soporte para redireccion de salida
+    if (tokens.empty()) return;
+    
+    string archivo_salida = "";
+    vector<string> args_comando;
+    bool hay_redireccion = false;
+    
+    for (size_t i = 0; i < tokens.size(); i++) { // Detectar y procesar redireccion de salida
+        if (tokens[i] == ">") {
+            hay_redireccion = true;
+            if (i + 1 < tokens.size()) {
+                archivo_salida = tokens[i + 1];
+                i++;
+            } else {
+                cerr << "Error: falta el nombre del archivo después de '>'" << endl;
+                return;
+            }
+        } else {
+            args_comando.push_back(tokens[i]);
+        }
+    }
+    
+    if (args_comando.empty()) return;
+    // Resuelve la ruta ejecutable del comando
+    string ruta_ejecutable = resolver_ruta(args_comando[0]);
+    if (ruta_ejecutable.empty()) {
+        cerr << "Error: comando '" << args_comando[0] << "' no encontrado" << endl;
+        return;
+    }
+    // Preparar argumentos para execv
+    char** argv = new char*[args_comando.size() + 1];
+    for (size_t i = 0; i < args_comando.size(); i++) {
+        argv[i] = strdup(args_comando[i].c_str());
+    }
+    argv[args_comando.size()] = NULL;
+    
+    pid_t pid = fork();
+    // Manejo de errores al crear proceso hijo
+    if (pid == -1) {
+        cerr << "Error: no se pudo crear el proceso hijo" << endl;
+        for (size_t i = 0; i < args_comando.size(); i++) {
+            free(argv[i]);
+        }
+        delete[] argv;
+        return;
+    }
+     // Codigo del proceso hijo
+    if (pid == 0) {
+        if (hay_redireccion) {
+            int fd = open(archivo_salida.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            if (fd == -1) {
+                cerr << "Error: no se pudo abrir el archivo '" << archivo_salida << "'" << endl;
+                exit(EXIT_FAILURE);
+            }
+            
+            if (dup2(fd, STDOUT_FILENO) == -1) {
+                cerr << "Error: fallo en la redirección" << endl;
+                close(fd);
+                exit(EXIT_FAILURE);
+            }
+            
+            close(fd);
+        }
+        
+        execv(ruta_ejecutable.c_str(), argv);
+        
+        cerr << "Error: no se pudo ejecutar '" << args_comando[0] << "'" << endl;
+        exit(EXIT_FAILURE);
+    } else { // Codigo del proceso padre
+        int status;
+        if (waitpid(pid, &status, 0) == -1) {
+            cerr << "Error: problema al esperar al proceso hijo" << endl;
+        }
+        
+        if (WIFEXITED(status)) {
+            int exit_code = WEXITSTATUS(status);
+            if (exit_code != 0) {
+                cerr << "El comando terminó con código de error: " << exit_code << endl;
+            }
+        } else if (WIFSIGNALED(status)) {
+            cerr << "El comando fue terminado por una señal" << endl;
+        }
+    }
+    
+    for (size_t i = 0; i < args_comando.size(); i++) {
+        free(argv[i]);
+    }
+    delete[] argv;
+}
+
+
+
 
 
 int main(){
