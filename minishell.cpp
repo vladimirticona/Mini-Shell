@@ -332,11 +332,75 @@ void ejecutar_comando(const vector<string>& tokens) { //Ejecuta comandos externo
 }
 
 
-
-
-
 int main(){
-
+    string linea;
+    
+    cout << "========================================" << endl;
+    cout << "   Bienvenido a Mini-Shell" << endl;
+    cout << "   Escribe 'help' para ver la ayuda" << endl;
+    cout << "   Escribe 'salir' para terminar" << endl;
+    cout << "========================================\n" << endl;
+    
+    while (true) {
+        mostrar_prompt();
+        
+        if (!getline(cin, linea)) {
+            cout << "\nSaliendo..." << endl;
+            break;
+        }
+        
+        if (linea.empty() || linea.find_first_not_of(" \t") == string::npos) {
+            continue;
+        }
+        
+        historial.push_back(linea);
+        
+        vector<string> tokens = tokenizar(linea);
+        
+        if (tokens.empty()) continue;
+        
+        string comando = tokens[0];
+        vector<string> args(tokens.begin() + 1, tokens.end());
+        
+        if (aliases.find(comando) != aliases.end()) {
+            string comando_expandido = aliases[comando];
+            vector<string> tokens_expandidos = tokenizar(comando_expandido);
+            tokens_expandidos.insert(tokens_expandidos.end(), args.begin(), args.end());
+            tokens = tokens_expandidos;
+            comando = tokens[0];
+            args = vector<string>(tokens.begin() + 1, tokens.end());
+        }
+        
+        // Verificar y ejecutar comandos internos
+        if (comando == "salir" || comando == "exit" || comando == "quit") {
+            cout << "Saliendo....." << endl;
+            break;
+        }
+        else if (comando == "cd") {
+            builtin_cd(args);
+        }
+        else if (comando == "pwd") {
+            builtin_pwd();
+        }
+        else if (comando == "help" || comando == "ayuda") {
+            builtin_help();
+        }
+        else if (comando == "history" || comando == "historial") {
+            builtin_history();
+        }
+        else if (comando == "meminfo") {
+            builtin_meminfo();
+        }
+        else if (comando == "alias") {
+            builtin_alias(args);
+        }
+        else if (comando == "unalias") {
+            builtin_unalias(args);
+        }
+        else { // Ejecuta comandos externos del sistema
+            ejecutar_comando(tokens);
+        }
+    }
 
     return 0;
 }
