@@ -100,6 +100,53 @@ void builtin_help() {  //Lo que se imprimira cuando se escriba "help" o "ayuda"
 }
 
 
+void builtin_history() { //Mostrar el historial de comandos ejecutados
+    if (historial.empty()) {
+        cout << "Historial vacío" << endl;
+        return;
+    }
+    
+    cout << "\n=== HISTORIAL DE COMANDOS ===" << endl;
+    for (size_t i = 0; i < historial.size(); i++) {
+        printf("%4zu  %s\n", i + 1, historial[i].c_str());
+    }
+    cout << "============================\n" << endl;
+}
+
+void builtin_meminfo() {   //Se mostrara las estadisticas 
+    FILE* fp = fopen("/proc/self/status", "r");
+    if (fp == NULL) {
+        cerr << "meminfo: no se pudo abrir /proc/self/status" << endl;
+        return;
+    }
+    
+    char linea[256];
+    cout << "\n=== ESTADÍSTICAS DE MEMORIA DEL PROCESO ===" << endl;
+    
+    while (fgets(linea, sizeof(linea), fp) != NULL) {
+        if (strncmp(linea, "VmPeak:", 7) == 0 ||
+            strncmp(linea, "VmSize:", 7) == 0 ||
+            strncmp(linea, "VmRSS:", 6) == 0 ||
+            strncmp(linea, "VmData:", 7) == 0 ||
+            strncmp(linea, "VmStk:", 6) == 0 ||
+            strncmp(linea, "VmExe:", 6) == 0) {
+            cout << "  " << linea;
+        }
+    }
+    
+    cout << "\nDescripción:" << endl;
+    cout << "  VmPeak: Pico máximo de memoria virtual usada" << endl;
+    cout << "  VmSize: Tamaño actual de memoria virtual" << endl;
+    cout << "  VmRSS:  Memoria física realmente en uso " << endl;
+    cout << "  VmData: Memoria del heap (datos dinámicos)" << endl;
+    cout << "  VmStk:  Memoria del stack" << endl;
+    cout << "  VmExe:  Memoria del código ejecutable" << endl;
+    cout << "==========================================\n" << endl;
+    
+    fclose(fp);
+}
+
+
 
 int main(){
 
