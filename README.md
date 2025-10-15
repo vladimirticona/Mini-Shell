@@ -1,5 +1,5 @@
 # Mini-Shell
-Un intérprete de línea de comandos básico para aprender Sistemas Operativos �
+Un intérprete de línea de comandos básico para aprender Sistemas Operativos
 
 Mini-Shell es un proyecto en C++ desarrollado como herramienta educativa para un curso de Sistemas Operativos. Es un intérprete de comandos sencillo que demuestra conceptos fundamentales como creación y gestión de procesos, comunicación entre procesos y redirección de entrada/salida.
 
