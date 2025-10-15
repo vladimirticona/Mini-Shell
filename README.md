@@ -10,3 +10,10 @@ Librerías:
   <sys/wait.h> (sincronización de procesos)
   <pthread.h> (manejo de hilos)
   <fcntl.h> y <sys/types.h> (I/O y redirección)
+
+Caracteristicas implementadas 
+  Base
+  - Ejecución de comandos con fork() y exec()
+  - Sincronización con wait() / waitpid()
+  - Comandos internos (cd, pwd, help)
+  - Manejo de errores
