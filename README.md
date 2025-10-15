@@ -1,9 +1,9 @@
 # Mini-Shell
-Un intérprete de línea de comandos básico para aprender Sistemas Operativos 💻
+Un intérprete de línea de comandos básico para aprender Sistemas Operativos �
 
 Mini-Shell es un proyecto en C++ desarrollado como herramienta educativa para un curso de Sistemas Operativos. Es un intérprete de comandos sencillo que demuestra conceptos fundamentales como creación y gestión de procesos, comunicación entre procesos y redirección de entrada/salida.
 
-## Características ✨
+## Características 
 
 | Categoría | Funcionalidad | Estado |
 |---|---:|---:|
@@ -13,12 +13,12 @@ Mini-Shell es un proyecto en C++ desarrollado como herramienta educativa para un
 | Pipes | Encadenamiento con `|` | No implementado |
 | Background | Ejecución en background con `&` y `jobs` | No implementado |
 
-## Requerimientos 🛠️
+## Requerimientos 
 
 - Sistema operativo: Linux o una capa tipo UNIX (WSL, MinGW o similar en Windows para desarrollo/ejecución).
 - Compilador: `g++` o `clang++` (soporta C++11 o superior).
 
-## Compilación y ejecución 🚀
+## Compilación y ejecución 
 
 1. Abre una terminal en la carpeta del proyecto (la que contiene `minishell.cpp`).
 2. Compila con g++ (ejemplo):
@@ -41,7 +41,7 @@ Si usas WSL puedes compilar y ejecutar como en Linux.
 
 
 
-## Casos de prueba y ejemplos de uso 🧪
+## Casos de prueba y ejemplos de uso 
 
 A continuación se muestra la correspondencia entre las imágenes de ejemplo y los nombres de archivo que propongo. Si tus capturas están en `docs/screenshots/`, renómbralas para que coincidan con estos nombres (o indícame que lo haga yo):
 
